@@ -1,0 +1,125 @@
+#dlogger-header {
+    background-color: white;
+    color: gray;
+    text-align: right;
+    padding: 0.7rem;
+    position:fixed;
+    top:1rem;
+    right:1rem;
+    float: right;
+    box-shadow: 0 1rem 1rem rgba(0,0,0,.15);
+}
+code {
+    background-color: white !important;
+    border: 1px solid gray;
+}
+#index table {
+    width: 100%;
+}
+#index tr.highlight { 
+    background-color: #a9d4ff; 
+}
+#index td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 3px 2px;    
+}
+#index td.nr {
+    width: 10%;
+}
+#index td.label {
+    width: 30%;
+}
+#index td.type {
+    width: 20%;
+}
+#index td.value {    
+    font-family:courier, fixed, monospace;
+    width: 40%;
+}
+#field-dlogger-label {
+    width: 30%;
+}
+.toast {
+  top: 30%;
+  left: 50%;
+  position: fixed;
+  transform: translate(-50%, 0px);
+  z-index: 9999;
+  width: 30%;
+  height: auto;
+  text-align: center;
+  vertical-align: middle;
+  border-radius: 25px;
+  box-shadow: 0 1rem 1rem rgba(0,0,0,.15);
+  font-weight: bold;
+  border: 3px solid orange;
+}
+input.refresh {
+   position: absolute;
+   width: 2rem; 
+   height: 2rem;
+}
+label.refresh {
+    position: absolute;
+    margin-left: 2.5rem;
+}
+.highlight {
+    background-color: yellow;
+}
+#search-records,
+#search-content {
+    margin-bottom: 0.5rem;
+}
+
+table tr.info {
+    background-color: #e6e9f0;
+}
+table tr.info.error {
+    background-color: #f4aaaa;
+}
+table tr.info.warning {
+    background-color: #f4d0aa;
+}
+table tr.info.section {
+    background-color: #faef93;
+}
+table tr.context {
+    color: gray;
+    font-style: italic;
+    font-size: 80%;  
+}
+
+span.context-stylesheet,
+span.context-containertype,
+span.context-containername {
+  
+}
+span.context-containertype::before {
+    content: ": ";
+}
+span.context-containername {
+    font-family: courier, fixed, monospace;
+}
+span.context-containername::before {
+    content: "  ";
+}
+span.context-label {
+    display: none;
+}
+iframe {
+    width: 100%;
+    height: 100%;
+}
+
+#index-button {
+   
+}
+#restart-button {
+    float: right;
+}
+#field-webapp-name {
+    width: 12em;
+    font-weight: bold;
+}

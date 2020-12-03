@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<webapp 
+  xmlns="http://www.armatiek.com/xslweb/webapp"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.armatiek.com/xslweb/webapp ../../config/xsd/xslweb/webapp.xsd">
+  
+  <title>DLogger client</title>
+  <description>DLogger client, sample application, illustrates the use of Dlogger</description>
+  
+  <development-mode>true</development-mode>
+  <max-upload-size>100</max-upload-size><!-- 100MB max upload-->
+  <wait-for-jobs-at-close>true</wait-for-jobs-at-close>
+  
+  <!-- Resources to serve straight away: -->
+  <resources>
+  </resources>
+
+  <!-- Stylesheet parameters: -->
+  <parameters>
+  </parameters>
+  
+  <!-- Scheduled job definitions: -->
+   <jobs>
+  </jobs>
+
+</webapp>

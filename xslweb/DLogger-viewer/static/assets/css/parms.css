@@ -1,0 +1,21 @@
+body {
+    font-family: courier, fixed, monospace;
+}
+h1 {
+    font-size: 1rem;
+    font-weight: bold;
+}
+table.parms {
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+table.parms td {
+    border: 1px solid gray;
+    padding: .5em;
+    font-size: inherit;
+    font-weight: bold;
+}
+.parms-type {
+    font-weight: normal;
+    color: gray;
+}

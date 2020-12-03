@@ -1,0 +1,39 @@
+<release-info>
+    <release>
+        <artifact>DLogger viewer</artifact>
+        <major-minor>1.1</major-minor>
+        <bugfix>0</bugfix>
+        
+        <notice>Copyright (C) 2020 Armatiek BV</notice>
+        <details>DLogger is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+            
+            Imvertor is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+            GNU General Public License for more details.
+            
+            A copy of the GNU General Public License is placed in install folder.</details>
+    </release>
+    <release>
+        <artifact>DLogger common</artifact>
+        <major-minor>1.1</major-minor>
+        <bugfix>0</bugfix>
+        
+        <notice>Copyright (C) 2020 Armatiek BV</notice>
+        <details>DLogger is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+            
+            Imvertor is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+            GNU General Public License for more details.
+            
+            A copy of the GNU General Public License is placed in install folder.</details>
+    </release>
+    
+</release-info>
