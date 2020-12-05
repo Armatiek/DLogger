@@ -30,20 +30,15 @@
         Implement a dlogger put. Pass key and value, return empty sequence. 
     -->
     <xsl:function name="dlogger-impl:put" as="empty-sequence()">
-        <xsl:param name="atts" as="element(att)*"/>
-        <xsl:variable name="request-xml" as="element(atts)">
-            <atts>
-                <xsl:sequence select="$atts"/>
-            </atts>
-        </xsl:variable>
+        <xsl:param name="atts" as="element(atts)"/>
         <xsl:variable name="request" as="element(http:request)">
             <http:request
-                href="{$config:dlogger-proxy-url}?app={encode-for-uri($dlogger-impl:webapp-name)}"
+                href="{$config:dlogger-proxy-url}"
                 method="POST"
                 send-authorization="false"
                 >
                 <http:body media-type="application/xml">
-                    <xsl:sequence select="$request-xml"/>
+                    <xsl:sequence select="$atts"/>
                 </http:body>
             </http:request>
         </xsl:variable>

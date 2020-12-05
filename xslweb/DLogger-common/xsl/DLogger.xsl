@@ -29,17 +29,19 @@
     <xsl:function name="dlogger-impl:init" as="empty-sequence()">
         <xsl:param name="clear" as="xs:boolean"/>
         <xsl:if test="$config:dlogger-mode">
-            <xsl:variable name="result" as="element(att)*">
-                <xsl:variable name="url" select="if ($config:dlogger-proxy) then ($config:dlogger-viewer-url || '/init/' || $dlogger-impl:webapp-name) else ('xslweb:///DLogger-viewer/init/' || $dlogger-impl:webapp-name)"/>
-                <xsl:variable name="call" as="element(att)">
-                    <att><!-- dummy wrapper avoids static type warning -->
-                        <xsl:sequence select="if (document($url)/*) then dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',0) else ()"/>
-                    </att>
-                </xsl:variable>
-                <xsl:sequence select="if ($clear) then $call[2] else ()"/><!-- force empty sequence in all cases -->
-                <!-- add this webapp to the list (as first), and set datetime to current; signals the init -->
-                <xsl:sequence select="dlogger-impl:set-attribute('dlogger_webapps',$dlogger-impl:webapp-name || ';' || replace(dlogger-impl:get-attribute('dlogger_webapps'),$dlogger-impl:webapp-name || ';',''))"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_datetime',dlogger-impl:format-dateTime(current-dateTime()))"/>
+            <xsl:variable name="result" as="element(atts)">
+                <atts>
+                    <xsl:variable name="url" select="if ($config:dlogger-proxy) then ($config:dlogger-viewer-url || '/init/' || $dlogger-impl:webapp-name) else ('xslweb:///DLogger-viewer/init/' || $dlogger-impl:webapp-name)"/>
+                    <xsl:variable name="call" as="element(att)">
+                        <att><!-- dummy wrapper avoids static type warning -->
+                            <xsl:sequence select="if (document($url)/*) then dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',0) else ()"/>
+                        </att>
+                    </xsl:variable>
+                    <xsl:sequence select="if ($clear) then $call[2] else ()"/><!-- force empty sequence in all cases -->
+                    <!-- add this webapp to the list (as first), and set datetime to current; signals the init -->
+                    <xsl:sequence select="dlogger-impl:set-attribute('dlogger_webapps',$dlogger-impl:webapp-name || ';' || replace(dlogger-impl:get-attribute('dlogger_webapps'),$dlogger-impl:webapp-name || ';',''))"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_datetime',dlogger-impl:format-dateTime(current-dateTime()))"/>
+                </atts>
             </xsl:variable>
             <xsl:sequence select="dlogger-impl:record($result)"/>
         </xsl:if>
@@ -57,73 +59,75 @@
         <xsl:param name="contents" as="item()*"/>
         <xsl:param name="type" as="xs:string?"/>
         <xsl:if test="$config:dlogger-mode">
-            <xsl:variable name="result" as="element(att)*">
-                <xsl:variable name="has-elements" select="(for $c in $contents return $c instance of element()) = true()"/>
-                <xsl:variable name="contents-as-xml" select="count($contents) gt 1 or $contents instance of attribute()"/>
-                <xsl:variable name="ext" select="
-                    if ($type = 'parms') then 'html' 
-                    else if ($contents-as-xml) then 'xml' 
-                    else if ($type) then $type 
-                    else if (($has-elements) or ($contents instance of document-node()) or ($contents instance of map(*))) then 'xml' 
-                    else 'txt'
-                    "/>
-                <xsl:variable name="datatypes" select="dlogger-impl:save-type($contents)"/>
-                <xsl:variable name="usable-contents" as="item()*">
-                    <xsl:choose>
-                        <xsl:when test="$contents-as-xml">
-                            <dlogger-wrapper xsl:exclude-result-prefixes="#all">
-                                <xsl:for-each select="$contents">
-                                    <xsl:variable name="position" select="position()"/>
-                                    <dlogger-wrap dlogger-type="{subsequence($datatypes,$position,1)}">
-                                        <xsl:sequence select="."/> 
-                                    </dlogger-wrap>
-                                </xsl:for-each>
-                            </dlogger-wrapper>
-                        </xsl:when>
-                        <xsl:when test="$contents instance of map(*)">
-                            <xsl:variable name="map-keys" select="map:keys($contents)" as="xs:anyAtomicType*"/>
-                            <dlogger-map xsl:exclude-result-prefixes="#all">
-                                <xsl:for-each select="$map-keys">
-                                    <dlogger-map-entry key="{.}">
-                                        <xsl:variable name="map-values" select="map:get($contents,.)"/>
-                                        <xsl:for-each select="$map-values">
-                                            <dlogger-map-value dlogger-type="{dlogger-impl:save-type(.)}">
-                                                <xsl:sequence select="."/>
-                                            </dlogger-map-value>
-                                        </xsl:for-each>
-                                    </dlogger-map-entry>
-                                </xsl:for-each>
-                            </dlogger-map>
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:sequence select="$contents"/>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
-                <xsl:variable name="params" as="element()"><!-- https://www.w3.org/TR/xpath-functions-31/#func-serialize -->
-                    <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
-                        <xsl:if test="$ext = 'xml'">
-                            <output:indent value="yes"/>
-                            <output:undeclare-prefixes value="yes"/>
-                            <output:version value="1.1"/>
-                        </xsl:if>
-                    </output:serialization-parameters>
-                </xsl:variable>
-                <xsl:variable name="contents-string" select="serialize($usable-contents,$params)"/>
-                <xsl:variable name="previous-recordnumber" select="xs:integer((dlogger-impl:get-attribute($dlogger-impl:webapp-name || '_recordnumber'),0)[1])" as="xs:integer"/>
-                <xsl:variable name="recordnumber" select="$previous-recordnumber + 1" as="xs:integer"/>
-                <xsl:variable name="value" select="if (not($ext = ('xml','json','html')) and count($usable-contents) = 1 and ($usable-contents castable as xs:string)) then substring(string($usable-contents),1,255) else ()"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',$recordnumber)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber, $contents-string)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_stylesheet', $stylesheet)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_containertype', $container-type)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_containername', $container-name)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_label', $label)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_file', replace($label,'[^A-Za-z0-9\s_\-\.]+','_'))"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_ext', $ext)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_type', $type)"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_datatype', $datatypes[1] || (if ($datatypes[2]) then ' (...)' else ''))"/>
-                <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_value', $value)"/>
+            <xsl:variable name="result" as="element(atts)">
+                <atts>
+                    <xsl:variable name="has-elements" select="(for $c in $contents return $c instance of element()) = true()"/>
+                    <xsl:variable name="contents-as-xml" select="count($contents) gt 1 or $contents instance of attribute()"/>
+                    <xsl:variable name="ext" select="
+                        if ($type = 'parms') then 'html' 
+                        else if ($contents-as-xml) then 'xml' 
+                        else if ($type) then $type 
+                        else if (($has-elements) or ($contents instance of document-node()) or ($contents instance of map(*))) then 'xml' 
+                        else 'txt'
+                        "/>
+                    <xsl:variable name="datatypes" select="dlogger-impl:save-type($contents)"/>
+                    <xsl:variable name="usable-contents" as="item()*">
+                        <xsl:choose>
+                            <xsl:when test="$contents-as-xml">
+                                <dlogger-wrapper xsl:exclude-result-prefixes="#all">
+                                    <xsl:for-each select="$contents">
+                                        <xsl:variable name="position" select="position()"/>
+                                        <dlogger-wrap dlogger-type="{subsequence($datatypes,$position,1)}">
+                                            <xsl:sequence select="."/> 
+                                        </dlogger-wrap>
+                                    </xsl:for-each>
+                                </dlogger-wrapper>
+                            </xsl:when>
+                            <xsl:when test="$contents instance of map(*)">
+                                <xsl:variable name="map-keys" select="map:keys($contents)" as="xs:anyAtomicType*"/>
+                                <dlogger-map xsl:exclude-result-prefixes="#all">
+                                    <xsl:for-each select="$map-keys">
+                                        <dlogger-map-entry key="{.}">
+                                            <xsl:variable name="map-values" select="map:get($contents,.)"/>
+                                            <xsl:for-each select="$map-values">
+                                                <dlogger-map-value dlogger-type="{dlogger-impl:save-type(.)}">
+                                                    <xsl:sequence select="."/>
+                                                </dlogger-map-value>
+                                            </xsl:for-each>
+                                        </dlogger-map-entry>
+                                    </xsl:for-each>
+                                </dlogger-map>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:sequence select="$contents"/>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:variable>
+                    <xsl:variable name="params" as="element()"><!-- https://www.w3.org/TR/xpath-functions-31/#func-serialize -->
+                        <output:serialization-parameters xmlns:output="http://www.w3.org/2010/xslt-xquery-serialization">
+                            <xsl:if test="$ext = 'xml'">
+                                <output:indent value="yes"/>
+                                <output:undeclare-prefixes value="yes"/>
+                                <output:version value="1.1"/>
+                            </xsl:if>
+                        </output:serialization-parameters>
+                    </xsl:variable>
+                    <xsl:variable name="contents-string" select="serialize($usable-contents,$params)"/>
+                    <xsl:variable name="previous-recordnumber" select="xs:integer((dlogger-impl:get-attribute($dlogger-impl:webapp-name || '_recordnumber'),0)[1])" as="xs:integer"/>
+                    <xsl:variable name="recordnumber" select="$previous-recordnumber + 1" as="xs:integer"/>
+                    <xsl:variable name="value" select="if (not($ext = ('xml','json','html')) and count($usable-contents) = 1 and ($usable-contents castable as xs:string)) then substring(string($usable-contents),1,255) else ()"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',$recordnumber)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber, $contents-string)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_stylesheet', $stylesheet)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_containertype', $container-type)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_containername', $container-name)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_label', $label)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_file', replace($label,'[^A-Za-z0-9\s_\-\.]+','_'))"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_ext', $ext)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_type', $type)"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_datatype', $datatypes[1] || (if ($datatypes[2]) then ' (...)' else ''))"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_value', $value)"/>
+                </atts>
             </xsl:variable>
             <xsl:sequence select="dlogger-impl:record($result)"/>
         </xsl:if>
@@ -222,14 +226,14 @@
     </xsl:function>
     
     <xsl:function name="dlogger-impl:record" as="empty-sequence()">
-        <xsl:param name="result" as="element(att)*"/><!-- elements only produced when posting to proxy -->
+        <xsl:param name="result" as="element(atts)"/><!-- elements only produced when posting to proxy -->
         <xsl:choose>
             <xsl:when test="$config:dlogger-proxy">
                 <!-- post the request to the dlogger proxy -->
                 <xsl:sequence select="dlogger-impl:put($result)"></xsl:sequence>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:sequence select="$result/node()"/>
+                <xsl:sequence select="$result/*"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:function>
@@ -241,10 +245,10 @@
     
     <!-- 
         override this function! 
-        implement a put request. Pass key and value, return empty sequence. 
+        implement a put request passing the <atts> element. 
     -->
     <xsl:function name="dlogger-impl:put" as="empty-sequence()">
-        <xsl:param name="atts" as="element(att)*"/>
+        <xsl:param name="atts" as="element(atts)"/>
         <xsl:sequence select="()"/>
     </xsl:function>
  
