@@ -18,6 +18,14 @@
 
   <!-- Stylesheet parameters: -->
   <parameters>
+    
+    <parameter name="dlogger-mode" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+      <value>true</value> <!-- dlogs moeten worden geschreven -->
+    </parameter>
+    <parameter name="dlogger-proxy" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+      <value>false</value> <!-- heeft geen proxy nodig -->
+    </parameter>
+
   </parameters>
   
   <!-- Scheduled job definitions: -->

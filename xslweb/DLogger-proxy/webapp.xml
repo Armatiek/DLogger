@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<webapp 
+  xmlns="http://www.armatiek.com/xslweb/webapp"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.armatiek.com/xslweb/webapp ../../config/xsd/xslweb/webapp.xsd">
+  
+  <title>DLogger proxy</title>
+  <description>DLogger proxy for non-XSLWeb applications</description>
+  
+  <development-mode>false</development-mode>
+  <max-upload-size>100</max-upload-size><!-- 100MB max upload-->
+  <wait-for-jobs-at-close>true</wait-for-jobs-at-close>
+  
+  <!-- Resources to serve straight away: -->
+  <resources/>
+  
+  <!-- Stylesheet parameters: -->
+  <parameters/>
+  
+  <!-- Scheduled job definitions: -->
+   <jobs/>
+  
+</webapp>

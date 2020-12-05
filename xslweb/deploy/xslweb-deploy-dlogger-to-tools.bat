@@ -16,6 +16,14 @@ xcopy /E /S /Y /D ^
 xcopy /E /S /Y /D ^
   "%webapps_develop%\DLogger-client\*.*" ^
   "%webapps_deploy%\DLogger-client"
+	
+xcopy /E /S /Y /D ^
+  "%webapps_develop%\DLogger-proxy\*.*" ^
+  "%webapps_deploy%\DLogger-proxy"
+
+xcopy /E /S /Y /D ^
+  "%webapps_develop%\DLogger-proxy-client\*.*" ^
+  "%webapps_deploy%\DLogger-proxy-client"
 
 rem FORFILES /p "%webapps_deploy%\DLogger-client\xsl" /m "*.xsl" /s /c "cmd /c %webapps_deploy%\DLogger-common\xsl\DLogger-deploy.bat @path"
 

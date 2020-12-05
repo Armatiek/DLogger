@@ -84,7 +84,7 @@
                                     </xsl:if>
                                     
                                 </xsl:for-each>
-                                <xsl:variable name="datetime-read" select="context:get-attribute($webapp-name || '_datetime')"/><!-- gezet door de applicatie -->
+                                <xsl:variable name="datetime-read" select="string(context:get-attribute($webapp-name || '_datetime'))"/><!-- gezet door de applicatie -->
                                 <xsl:sequence select="context:set-attribute($webapp-name || '_datetimeread',$datetime-read)"/><!-- uitgelezen door "changed" -->
                             </tbody>
                         </table>

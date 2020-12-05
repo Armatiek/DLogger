@@ -29,12 +29,11 @@
                 <resp:header name="Content-type">text/plain;charset=UTF-8</resp:header>
             </resp:headers>  
             <resp:body>
-                <xsl:variable name="datetime" select="context:get-attribute($webapp-name || '_datetime')"/><!-- gezet door de applicatie -->
-                <xsl:variable name="datetime-read" select="context:get-attribute($webapp-name || '_datetimeread')"/><!-- gezet bij het uitlezen van de resources -->
-                <xsl:value-of select="if (exists($datetime) and not($datetime = $datetime-read)) then amf:format-dateTime($datetime) else ''"/>
+                <xsl:variable name="datetime" select="string(context:get-attribute($webapp-name || '_datetime'))"/><!-- gezet door de applicatie -->
+                <xsl:variable name="datetime-read" select="string(context:get-attribute($webapp-name || '_datetimeread'))"/><!-- gezet bij het uitlezen van de resources -->
+                <xsl:value-of select="if (exists($datetime) and ($datetime ne $datetime-read)) then $datetime else ''"/>
             </resp:body>
         </resp:response>
     </xsl:template>
-    
     
 </xsl:stylesheet>

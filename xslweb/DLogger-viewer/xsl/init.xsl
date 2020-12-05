@@ -28,7 +28,7 @@
         <result webapp="{$webapp-name}">
             <xsl:try>
                 <!-- haal het huidige record nummer op. Verwijder vervolgens alle attributen tot en met de laatste record. -->
-                <xsl:variable name="last-recordnumber" select="(context:get-attribute($webapp-name || '_recordnumber'),0)[1]"/>
+                <xsl:variable name="last-recordnumber" select="xs:integer((context:get-attribute($webapp-name || '_recordnumber'),0)[1])"/>
                 <xsl:for-each select="1 to $last-recordnumber">
                     <xsl:variable name="recordnumber" select="."/>
                     <xsl:sequence select="context:set-attribute($webapp-name || '_' || $recordnumber, ())"/>

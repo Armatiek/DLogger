@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<webapp 
+  xmlns="http://www.armatiek.com/xslweb/webapp"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.armatiek.com/xslweb/webapp ../../config/xsd/xslweb/webapp.xsd">
+  
+  <title>DLogger proxy client</title>
+  <description>DLogger proxy client, sample application, illustrates the use of Dlogger for non-XSLWeb applications</description>
+  
+  <development-mode>false</development-mode>
+  <max-upload-size>100</max-upload-size><!-- 100MB max upload-->
+  <wait-for-jobs-at-close>true</wait-for-jobs-at-close>
+  
+  <!-- Resources to serve straight away: -->
+  <resources>
+  </resources>
+
+  <!-- Stylesheet parameters: -->
+  <parameters>
+    
+    <parameter name="dlogger-mode" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+      <value>true</value> <!-- Does this app write Dlogs? -->
+    </parameter>
+    <parameter name="dlogger-proxy" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+      <value>true</value> <!-- does this webapp access a proxy? -->
+    </parameter>
+    
+    <parameter name="dlogger-viewer-url" uri="http://www.armatiek.com/xslweb/configuration" type="xs:string">
+      <value>http://localhost:8080/xslweb/DLogger-viewer</value> <!-- URL the the DLogger viewer -->
+    </parameter>
+    <parameter name="dlogger-proxy-url" uri="http://www.armatiek.com/xslweb/configuration" type="xs:string">
+      <value>http://localhost:8080/xslweb/DLogger-proxy</value> <!-- URL the the DLogger proxy -->
+    </parameter>
+    <parameter name="dlogger-proxy-webapp-name" uri="http://www.armatiek.com/xslweb/configuration" type="xs:string">
+      <value>DLogger-proxy-client</value> <!-- Register this name to DLogger as the client name -->
+    </parameter>
+    
+  </parameters>
+  
+  <!-- Scheduled job definitions: -->
+   <jobs>
+  </jobs>
+
+</webapp>

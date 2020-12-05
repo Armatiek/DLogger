@@ -9,7 +9,6 @@
   xmlns:auth="http://www.armatiek.com/xslweb/auth"
 
   xmlns:ext="http://www.armatiek.com/xslweb/functions/custom" 
-  xmlns:log="http://www.armatiek.com/xslweb/functions/log"  
   
   xmlns:amf="http://www.armatiek.nl/functions" 
   
