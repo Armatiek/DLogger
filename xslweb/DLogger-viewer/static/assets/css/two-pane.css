@@ -15,24 +15,29 @@ body {
 }
 
 #index-pane {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
     width: 30%;
     position: fixed;
     top: 0;
     left: 0;
     padding: 10px;
-    height: 100%;
     z-index: 999;
     transition: all 0.9s;
     overflow: hidden !important;
 }
 
+#index-nav {
+    height: 10%;
+}
 #index-pane-wrapper {
-    height: 90%;
+    flex: 1 1 auto;
     position: relative;
     overflow: auto;
-    padding-top: 1em;
 }
 #index-search-wrapper {
+    flex: 0 1 auto;
     position: relative;
     padding-top: 1em;
 }
@@ -46,9 +51,11 @@ body {
 ----------------------------------------------------- */
 
 #content-pane {
+    display: flex;
+    flex-flow: column;
+    height: 100%;
     width: 70%;
     padding: 10px;
-    height: 100%;
     transition: all 0.3s;
     position: absolute;
     top: 0;
@@ -56,29 +63,33 @@ body {
     overflow: hidden !important;
 }
 
+#content-nav {
+    height: 10%;
+}
 #content-pane.active {
     width: 70%;
 }
 
 #content-pane-wrapper {
-    height: 90%;
+    flex: 1 1 auto;
     position: relative;
     overflow: auto;
-    padding-top: 1em;
 }
 #content-search-wrapper {
+    flex: 0 1 auto;
     position: relative;
     padding-top: 1em;
 }
 
 #content-pane-body,
 #content-pane-body-ashtml {
-    width: 100%;
-    height: 100%;
+    /* width: 100%;
+    height: 100%; */
 }
 
 /*  --- nav style ---- */
 nav {
+    flex: 0 1 auto;
     height: 5em;
     border-bottom: 2px solid #007bff;
 }
