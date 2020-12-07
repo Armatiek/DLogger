@@ -71,6 +71,7 @@
                         else 'txt'
                         "/>
                     <xsl:variable name="datatypes" select="dlogger-impl:save-type($contents)"/>
+                    <xsl:variable name="is-singleton-datatype" select="count($datatypes) eq 1 and starts-with($datatypes,'xs')"/>
                     <xsl:variable name="usable-contents" as="item()*">
                         <xsl:choose>
                             <xsl:when test="$contents-as-xml">
@@ -112,10 +113,10 @@
                             </xsl:if>
                         </output:serialization-parameters>
                     </xsl:variable>
-                    <xsl:variable name="contents-string" select="serialize($usable-contents,$params)"/>
+                    <xsl:variable name="contents-string" select="if ($is-singleton-datatype) then $usable-contents else serialize($usable-contents,$params)"/>
                     <xsl:variable name="previous-recordnumber" select="xs:integer((dlogger-impl:get-attribute($dlogger-impl:webapp-name || '_recordnumber'),0)[1])" as="xs:integer"/>
                     <xsl:variable name="recordnumber" select="$previous-recordnumber + 1" as="xs:integer"/>
-                    <xsl:variable name="value" select="if (not($ext = ('xml','json','html')) and count($usable-contents) = 1 and ($usable-contents castable as xs:string)) then substring(string($usable-contents),1,255) else ()"/>
+                    <xsl:variable name="value" select="if (not($ext = ('xml','json','html')) and count($usable-contents) = 1 and ($usable-contents castable as xs:string)) then substring(string($usable-contents),1,1024) else ()"/>
                     <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',$recordnumber)"/>
                     <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber, $contents-string)"/>
                     <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_stylesheet', $stylesheet)"/>

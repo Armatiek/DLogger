@@ -38,6 +38,7 @@
             if ($ext = 'html') then 'language-html' else 
             if ($ext = 'xhtml') then 'language-xml' else 
             'plaintext'"/>
+        <xsl:variable name="content-is-url" select="matches($content,'^http(s)?://.*$')" as="xs:boolean"/>
         <xsl:choose>
             <xsl:when test="$passed-record and $passed-mode = 'ashtml' and $type = 'parms'">
                 <xsl:variable name="xml" select="parse-xml($content)" as="document-node()"/>
@@ -52,6 +53,13 @@
             </xsl:when>
             <xsl:when test="$passed-record and $passed-mode = 'ashtml'">
                 <xsl:sequence select="parse-xml($content)"/>
+            </xsl:when>
+            <xsl:when test="$passed-record and $passed-mode = 'content' and $content-is-url">
+                <a href="{$content}" target="DLogger-load" xsl:exclude-result-prefixes="#all">
+                    <code>
+                        <xsl:sequence select="$content"/>
+                    </code>
+                </a>
             </xsl:when>
             <xsl:when test="$passed-record and $passed-mode = 'content'">
                 <code class="hljs {$hljs-type}" xsl:exclude-result-prefixes="#all">
