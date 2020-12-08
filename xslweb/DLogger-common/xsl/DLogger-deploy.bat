@@ -16,14 +16,22 @@ rem TODO read these from environment variables:
 	set webapp_dlogger_path=c:\tools\xslweb\home\webapps\DLogger-common
 	set webapp_dlogger_tempfile=c:\temp\temp.xsl
 	set saxon_processor=saxon-pe
-
+	
 set xsl_deploy=%webapp_dlogger_path%\xsl\DLogger-deploy.xsl
 
 FIND "--[dlogger]" %1 >nul
 if %errorlevel%.==0. goto end
 
 echo Reflexion: %1
-call %saxon_processor% -s:%1 -xsl:%xsl_deploy% -o:%webapp_dlogger_tempfile% stylesheet-path=%1
+
+set log_path=%2
+set log_template=%3
+
+call %saxon_processor% -s:%1 -xsl:%xsl_deploy% -o:%webapp_dlogger_tempfile% ^
+                       stylesheet-path=%1 ^
+                       log-path=false  ^
+					   log-template=true
+					   
 copy /b /y %webapp_dlogger_tempfile% %1 
 
 :end
