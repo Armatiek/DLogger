@@ -38,7 +38,7 @@
             if ($ext = 'html') then 'language-html' else 
             if ($ext = 'xhtml') then 'language-xml' else 
             'plaintext'"/>
-        <xsl:variable name="content-is-url" select="matches($content,'^http(s)?://.*$')" as="xs:boolean"/>
+        <xsl:variable name="content-is-url" select="matches(string($content),'^http(s)?://.*$')" as="xs:boolean"/>
         <xsl:choose>
             <xsl:when test="$passed-record and $passed-mode = 'ashtml' and $type = 'parms'">
                 <xsl:variable name="xml" select="parse-xml($content)" as="document-node()"/>
