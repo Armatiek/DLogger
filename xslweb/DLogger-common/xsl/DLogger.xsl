@@ -26,6 +26,8 @@
     <xsl:param name="config:dlogger-viewer-url" as="xs:string" select="'/unknown-dlogger-viewer-url'"/><!-- URL of the dlogger viewer webapp itself -->
     
     <xsl:variable name="dlogger-impl:webapp-name" select="substring-after($config:webapp-path,'/')"/> 
+    <xsl:variable name="dlogger-impl:comment-dashes">--</xsl:variable>
+    <xsl:variable name="dlogger-impl:comment-dashes-alter">- - </xsl:variable>
     
     <xsl:function name="dlogger-impl:init" as="empty-sequence()">
         <xsl:param name="clear" as="xs:boolean"/>
@@ -169,12 +171,14 @@
         <xsl:param name="container-type" as="xs:string?"/>
         <xsl:param name="container-name" as="xs:string?"/>
         <xsl:param name="label" as="xs:string"/>
-        <xsl:comment>DLOG {$label} : {$stylesheet} : {$container-type} : {$container-name}</xsl:comment>
+        <xsl:variable name="c">DLOG {$label} : {$stylesheet} : {$container-type} : {$container-name}</xsl:variable>
+        <xsl:comment>{replace($c,$dlogger-impl:comment-dashes,$dlogger-impl:comment-dashes-alter)}</xsl:comment>
     </xsl:function>
     
     <xsl:function name="dlogger-impl:comment" as="comment()">
         <xsl:param name="label" as="xs:string"/>
-        <xsl:comment>DLOG {$label}</xsl:comment>
+        <xsl:variable name="c">DLOG {$label}</xsl:variable>
+        <xsl:comment>{replace($c,$dlogger-impl:comment-dashes,$dlogger-impl:comment-dashes-alter)}</xsl:comment>
     </xsl:function>        
     
     <xsl:function name="dlogger-impl:save-type" as="xs:string*">
