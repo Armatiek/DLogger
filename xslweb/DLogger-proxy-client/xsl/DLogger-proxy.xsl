@@ -4,7 +4,7 @@
     xmlns:http="http://expath.org/ns/http-client"
     xmlns:config="http://www.armatiek.com/xslweb/configuration"
     
-    xmlns:dlogger-impl="http://www.armatiek.nl/functions/dlogger"
+    xmlns:dlogger-impl="http://www.armatiek.nl/xslweb/functions/dlogger"
     >
     
     <!-- 

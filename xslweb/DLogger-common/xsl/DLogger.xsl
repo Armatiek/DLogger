@@ -6,7 +6,7 @@
     
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     
-    xmlns:dlogger-impl="http://www.armatiek.nl/functions/dlogger"
+    xmlns:dlogger-impl="http://www.armatiek.nl/xslweb/functions/dlogger"
     
     expand-text="yes"
     >

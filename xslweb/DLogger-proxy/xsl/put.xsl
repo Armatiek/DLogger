@@ -6,7 +6,7 @@
     xmlns:req="http://www.armatiek.com/xslweb/request"
     xmlns:context="http://www.armatiek.com/xslweb/functions/context"
     
-    xmlns:dlogger="http://www.armatiek.nl/functions/dlogger"
+    xmlns:dlogger="http://www.armatiek.nl/xslweb/functions/dlogger"
     
     exclude-result-prefixes="#all"
     expand-text="yes"
