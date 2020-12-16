@@ -28,7 +28,7 @@
             <xsl:otherwise>
                 <xsl:copy>
                     <xsl:copy-of select="@*"/>
-                    <xsl:namespace name="dlogger-impl">http://www.armatiek.nl/functions/dlogger</xsl:namespace>
+                    <xsl:namespace name="dlogger-impl">http://www.armatiek.nl/xslweb/functions/dlogger</xsl:namespace>
                     <xsl:comment>[dlogger] This stylesheet has been deployed with dlogger-reflexion at {current-dateTime()}</xsl:comment>
                     <xsl:apply-templates/>
                 </xsl:copy>
