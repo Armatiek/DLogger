@@ -19,21 +19,21 @@
   <!-- Stylesheet parameters: -->
   <parameters>
     
-    <parameter name="dlogger-mode" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+    <parameter name="dlogger-mode" uri="http://www.armatiek.nl/functions/dlogger" type="xs:boolean">
       <value>true</value> <!-- Does this app write Dlogs? -->
     </parameter>
-    <parameter name="dlogger-proxy" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+    <parameter name="dlogger-client" uri="http://www.armatiek.nl/functions/dlogger" type="xs:string">
+      <value>DLogger-proxy-client</value> <!-- Register this name to DLogger as the client name -->
+    </parameter>
+    <parameter name="dlogger-proxy" uri="http://www.armatiek.nl/functions/dlogger" type="xs:boolean">
       <value>true</value> <!-- does this webapp access a proxy? -->
     </parameter>
     
-    <parameter name="dlogger-viewer-url" uri="http://www.armatiek.com/xslweb/configuration" type="xs:string">
+    <parameter name="dlogger-viewer-url" uri="http://www.armatiek.nl/functions/dlogger" type="xs:string">
       <value>http://localhost:8080/xslweb/DLogger-viewer</value> <!-- URL the the DLogger viewer -->
     </parameter>
-    <parameter name="dlogger-proxy-url" uri="http://www.armatiek.com/xslweb/configuration" type="xs:string">
+    <parameter name="dlogger-proxy-url" uri="http://www.armatiek.nl/functions/dlogger" type="xs:string">
       <value>http://localhost:8080/xslweb/DLogger-proxy</value> <!-- URL the the DLogger proxy -->
-    </parameter>
-    <parameter name="dlogger-proxy-webapp-name" uri="http://www.armatiek.com/xslweb/configuration" type="xs:string">
-      <value>DLogger-proxy-client</value> <!-- Register this name to DLogger as the client name -->
     </parameter>
     
   </parameters>

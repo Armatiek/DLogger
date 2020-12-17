@@ -4,18 +4,18 @@
     xmlns:http="http://expath.org/ns/http-client"
     xmlns:config="http://www.armatiek.com/xslweb/configuration"
     
-    xmlns:dlogger-impl="http://www.armatiek.nl/xslweb/functions/dlogger"
+    xmlns:dlogger-impl="http://www.armatiek.nl/functions/dlogger"
     >
     
     <!-- 
-        For this external app, set all config:* parameters in webapp.xml 
+        For this external app, set all dlogger-impl:* parameters in webapp.xml 
     -->
-    <xsl:param name="config:dlogger-mode" as="xs:boolean" select="false()"/>
-    <xsl:param name="config:dlogger-proxy" as="xs:boolean" select="true()"/>
+    <xsl:param name="dlogger-impl:dlogger-mode" as="xs:boolean" select="false()"/>
+    <xsl:param name="dlogger-impl:dlogger-client" as="xs:string" select="'unknown-client'"/>
+    <xsl:param name="dlogger-impl:dlogger-proxy" as="xs:boolean" select="true()"/>
     
-    <xsl:param name="config:dlogger-proxy-url" as="xs:string" select="'/set-in-webapp'"/>
-    <xsl:param name="config:dlogger-viewer-url" as="xs:string" select="'/set-in-webapp'"/>
-    <xsl:param name="config:dlogger-proxy-webapp-name" as="xs:string" select="'/set-in-webapp'"/>
+    <xsl:param name="dlogger-impl:dlogger-proxy-url" as="xs:string" select="'/set-in-webapp'"/>
+    <xsl:param name="dlogger-impl:dlogger-viewer-url" as="xs:string" select="'/set-in-webapp'"/>
     
     <!-- 
         import the DLogger code, which is distributed and should not be altered within the settings of the client app. 
@@ -24,16 +24,14 @@
     -->
     <xsl:import href="../../DLogger-common/xsl/DLogger.xsl"/>
     
-    <xsl:variable name="dlogger-impl:webapp-name" select="$config:dlogger-proxy-webapp-name"/>
-    
-     <!-- 
+    <!-- 
         Implement a dlogger put. Pass key and value, return empty sequence. 
     -->
     <xsl:function name="dlogger-impl:put" as="empty-sequence()">
         <xsl:param name="atts" as="element(atts)"/>
         <xsl:variable name="request" as="element(http:request)">
             <http:request
-                href="{$config:dlogger-proxy-url}"
+                href="{$dlogger-impl:dlogger-proxy-url}"
                 method="POST"
                 send-authorization="false"
                 >
@@ -53,7 +51,7 @@
         <xsl:param name="key" as="xs:string"/>
         <xsl:variable name="request" as="element(http:request)">
             <http:request
-                href="{$config:dlogger-proxy-url}?app={encode-for-uri($config:dlogger-proxy-webapp-name)}&amp;key={encode-for-uri($key)}"
+                href="{$dlogger-impl:dlogger-proxy-url}?app={encode-for-uri($dlogger-impl:dlogger-client)}&amp;key={encode-for-uri($key)}"
                 method="GET"
                 send-authorization="false"
                 override-media-type="text/plain"

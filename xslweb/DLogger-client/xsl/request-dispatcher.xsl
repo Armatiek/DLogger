@@ -5,7 +5,7 @@
   xmlns:xs="http://www.w3.org/2001/XMLSchema"  
   xmlns:pipeline="http://www.armatiek.com/xslweb/pipeline"
   
-  xmlns:dlogger="http://www.armatiek.nl/xslweb/functions/dlogger"
+  xmlns:dlogger="http://www.armatiek.nl/functions/dlogger"
   
   exclude-result-prefixes="#all"
   version="3.0">

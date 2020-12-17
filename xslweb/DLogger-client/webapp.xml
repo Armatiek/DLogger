@@ -19,10 +19,13 @@
   <!-- Stylesheet parameters: -->
   <parameters>
     
-    <parameter name="dlogger-mode" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+    <parameter name="dlogger-mode" uri="http://www.armatiek.nl/functions/dlogger" type="xs:boolean">
       <value>true</value> <!-- dlogs moeten worden geschreven -->
     </parameter>
-    <parameter name="dlogger-proxy" uri="http://www.armatiek.com/xslweb/configuration" type="xs:boolean">
+    <parameter name="dlogger-client" uri="http://www.armatiek.nl/functions/dlogger" type="xs:string">
+      <value>DLogger-client</value> <!-- Register this name to DLogger as the client name -->
+    </parameter>
+    <parameter name="dlogger-proxy" uri="http://www.armatiek.nl/functions/dlogger" type="xs:boolean">
       <value>false</value> <!-- heeft geen proxy nodig -->
     </parameter>
 

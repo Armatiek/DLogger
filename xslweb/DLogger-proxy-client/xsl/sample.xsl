@@ -6,7 +6,7 @@
     
     xmlns:amf="http://www.armatiek.nl/functions"
  
-    xmlns:dlogger="http://www.armatiek.nl/xslweb/functions/dlogger"
+    xmlns:dlogger="http://www.armatiek.nl/functions/dlogger"
     
     exclude-result-prefixes="#all"
     expand-text="yes"

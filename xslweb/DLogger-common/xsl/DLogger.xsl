@@ -6,7 +6,7 @@
     
     xmlns:map="http://www.w3.org/2005/xpath-functions/map"
     
-    xmlns:dlogger-impl="http://www.armatiek.nl/xslweb/functions/dlogger"
+    xmlns:dlogger-impl="http://www.armatiek.nl/functions/dlogger"
     
     expand-text="yes"
     >
@@ -19,31 +19,30 @@
         Do not edit!
     -->
     
-    <xsl:param name="config:webapp-path" as="xs:string" select="'/no-webapp-path'"/>
-    <xsl:param name="config:dlogger-mode" as="xs:boolean" select="false()"/><!-- is dlogger mode active, i.e. should this app produce dlogs? -->
+    <xsl:param name="dlogger-impl:dlogger-viewer-url" as="xs:string" select="'http://unknown-dlogger-viewer-url'"/><!-- URL of the dlogger viewer webapp itself -->
     
-    <xsl:param name="config:dlogger-proxy" as="xs:boolean" select="false()"/><!-- does this webapp access a proxy? -->
-    <xsl:param name="config:dlogger-viewer-url" as="xs:string" select="'/unknown-dlogger-viewer-url'"/><!-- URL of the dlogger viewer webapp itself -->
+    <xsl:param name="dlogger-impl:dlogger-mode" as="xs:boolean" select="false()"/><!-- is dlogger mode active, i.e. should this app produce dlogs? -->
+    <xsl:param name="dlogger-impl:dlogger-client" as="xs:string" select="'unknown-app'"/><!-- the name of the client shown in viewer -->
+    <xsl:param name="dlogger-impl:dlogger-proxy" as="xs:boolean" select="false()"/><!-- does this webapp access a proxy? -->
     
-    <xsl:variable name="dlogger-impl:webapp-name" select="substring-after($config:webapp-path,'/')"/> 
     <xsl:variable name="dlogger-impl:comment-dashes">--</xsl:variable>
     <xsl:variable name="dlogger-impl:comment-dashes-alter">- - </xsl:variable>
     
     <xsl:function name="dlogger-impl:init" as="empty-sequence()">
         <xsl:param name="clear" as="xs:boolean"/>
-        <xsl:if test="$config:dlogger-mode">
+        <xsl:if test="$dlogger-impl:dlogger-mode">
             <xsl:variable name="result" as="element(atts)">
                 <atts>
-                    <xsl:variable name="url" select="if ($config:dlogger-proxy) then ($config:dlogger-viewer-url || '/init/' || $dlogger-impl:webapp-name) else ('xslweb:///DLogger-viewer/init/' || $dlogger-impl:webapp-name)"/>
+                    <xsl:variable name="url" select="if ($dlogger-impl:dlogger-proxy) then ($dlogger-impl:dlogger-viewer-url || '/init/' || $dlogger-impl:dlogger-client) else ('xslweb:///DLogger-viewer/init/' || $dlogger-impl:dlogger-client)"/>
                     <xsl:variable name="call" as="element(att)">
                         <att><!-- dummy wrapper avoids static type warning -->
-                            <xsl:sequence select="if (document($url)/*) then dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',0) else ()"/>
+                            <xsl:sequence select="if (document($url)/*) then dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_recordnumber',0) else ()"/>
                         </att>
                     </xsl:variable>
                     <xsl:sequence select="if ($clear) then $call[2] else ()"/><!-- force empty sequence in all cases -->
                     <!-- add this webapp to the list (as first), and set datetime to current; signals the init -->
-                    <xsl:sequence select="dlogger-impl:set-attribute('dlogger_webapps',$dlogger-impl:webapp-name || ';' || replace(dlogger-impl:get-attribute('dlogger_webapps'),$dlogger-impl:webapp-name || ';',''))"/>
-                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_datetime',dlogger-impl:format-dateTime(current-dateTime()))"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute('dlogger_webapps',$dlogger-impl:dlogger-client || ';' || replace(dlogger-impl:get-attribute('dlogger_webapps'),$dlogger-impl:dlogger-client || ';',''))"/>
+                    <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_datetime',dlogger-impl:format-dateTime(current-dateTime()))"/>
                 </atts>
             </xsl:variable>
             <xsl:sequence select="dlogger-impl:record($result)"/>
@@ -63,7 +62,7 @@
         <xsl:param name="type" as="xs:string?"/>
         
         <xsl:choose>
-            <xsl:when test="not($config:dlogger-mode)">
+            <xsl:when test="not($dlogger-impl:dlogger-mode)">
                 <!-- do nothing -->
             </xsl:when>
             <xsl:otherwise>
@@ -122,20 +121,20 @@
                             </output:serialization-parameters>
                         </xsl:variable>
                         <xsl:variable name="contents-string" select="if ($is-singleton-datatype) then $usable-contents else serialize($usable-contents,$params)"/>
-                        <xsl:variable name="previous-recordnumber" select="xs:integer((dlogger-impl:get-attribute($dlogger-impl:webapp-name || '_recordnumber'),0)[1])" as="xs:integer"/>
+                        <xsl:variable name="previous-recordnumber" select="xs:integer((dlogger-impl:get-attribute($dlogger-impl:dlogger-client || '_recordnumber'),0)[1])" as="xs:integer"/>
                         <xsl:variable name="recordnumber" select="$previous-recordnumber + 1" as="xs:integer"/>
                         <xsl:variable name="value" select="if (not($ext = ('xml','json','html')) and count($usable-contents) = 1 and ($usable-contents castable as xs:string)) then substring(string($usable-contents),1,1024) else ()"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_recordnumber',$recordnumber)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber, $contents-string)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_stylesheet', $stylesheet)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_containertype', $container-type)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_containername', $container-name)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_label', $label)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_file', replace($label,'[^A-Za-z0-9\s_\-\.]+','_'))"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_ext', $ext)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_type', $type)"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_datatype', $datatypes[1] || (if ($datatypes[2]) then ' (...)' else ''))"/>
-                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:webapp-name || '_' || $recordnumber || '_value', $value)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_recordnumber',$recordnumber)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber, $contents-string)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_stylesheet', $stylesheet)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_containertype', $container-type)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_containername', $container-name)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_label', $label)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_file', replace($label,'[^A-Za-z0-9\s_\-\.]+','_'))"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_ext', $ext)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_type', $type)"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_datatype', $datatypes[1] || (if ($datatypes[2]) then ' (...)' else ''))"/>
+                        <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_' || $recordnumber || '_value', $value)"/>
                     </atts>
                 </xsl:variable>
                 <xsl:sequence select="dlogger-impl:record($result)"/>
@@ -227,7 +226,7 @@
         <xsl:param name="key" as="xs:string"/>
         <xsl:param name="value" as="item()?"/>
         <xsl:choose>
-            <xsl:when test="$config:dlogger-proxy">
+            <xsl:when test="$dlogger-impl:dlogger-proxy">
                 <att key="{$key}">
                     <xsl:value-of select="$value"/>
                 </att>
@@ -241,7 +240,7 @@
     <xsl:function name="dlogger-impl:get-attribute" as="item()*">
         <xsl:param name="key" as="xs:string"/>
         <xsl:choose>
-            <xsl:when test="$config:dlogger-proxy">
+            <xsl:when test="$dlogger-impl:dlogger-proxy">
                 <!-- get a response from the dlogger proxy -->
                 <xsl:sequence select="dlogger-impl:get($key)"/>
             </xsl:when>
@@ -254,7 +253,7 @@
     <xsl:function name="dlogger-impl:record" as="empty-sequence()">
         <xsl:param name="result" as="element(atts)"/><!-- elements only produced when posting to proxy -->
         <xsl:choose>
-            <xsl:when test="$config:dlogger-proxy">
+            <xsl:when test="$dlogger-impl:dlogger-proxy">
                 <!-- post the request to the dlogger proxy -->
                 <xsl:sequence select="dlogger-impl:put($result)"></xsl:sequence>
             </xsl:when>
