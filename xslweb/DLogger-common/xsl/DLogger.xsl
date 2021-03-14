@@ -33,13 +33,15 @@
         <xsl:if test="$dlogger-impl:dlogger-mode">
             <xsl:variable name="result" as="element(atts)">
                 <atts>
-                    <xsl:variable name="url" select="if ($dlogger-impl:dlogger-proxy) then ($dlogger-impl:dlogger-viewer-url || '/init/' || $dlogger-impl:dlogger-client) else ('xslweb:///DLogger-viewer/init/' || $dlogger-impl:dlogger-client)"/>
-                    <xsl:variable name="call" as="element(att)">
-                        <att><!-- dummy wrapper avoids static type warning -->
-                            <xsl:sequence select="if (document($url)/*) then dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_recordnumber',0) else ()"/>
-                        </att>
-                    </xsl:variable>
-                    <xsl:sequence select="if ($clear) then $call[2] else ()"/><!-- force empty sequence in all cases -->
+                    <xsl:if test="$clear">
+                        <xsl:variable name="url" select="if ($dlogger-impl:dlogger-proxy) then ($dlogger-impl:dlogger-viewer-url || '/init/' || $dlogger-impl:dlogger-client) else ('xslweb:///DLogger-viewer/init/' || $dlogger-impl:dlogger-client)"/>
+                        <xsl:variable name="call" as="element(att)">
+                            <att><!-- dummy wrapper avoids static type warning -->
+                                <xsl:sequence select="if (document($url)/*) then dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_recordnumber',0) else ()"/>
+                            </att>
+                        </xsl:variable>
+                        <xsl:sequence select="$call[2]"/><!-- force empty sequence -->
+                    </xsl:if>
                     <!-- add this webapp to the list (as first), and set datetime to current; signals the init -->
                     <xsl:sequence select="dlogger-impl:set-attribute('dlogger_webapps',$dlogger-impl:dlogger-client || ';' || replace(dlogger-impl:get-attribute('dlogger_webapps'),$dlogger-impl:dlogger-client || ';',''))"/>
                     <xsl:sequence select="dlogger-impl:set-attribute($dlogger-impl:dlogger-client || '_datetime',dlogger-impl:format-dateTime(current-dateTime()))"/>
