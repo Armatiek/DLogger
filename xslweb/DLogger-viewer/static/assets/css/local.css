@@ -85,6 +85,9 @@ table tr.info.warning {
 table tr.info.section {
     background-color: #faef93;
 }
+table tr.info.monitor {
+    background-color: #80ff002e;
+}
 table tr.context {
     color: gray;
     font-style: italic;
