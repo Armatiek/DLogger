@@ -167,9 +167,7 @@
                             <td>
                                 <xsl:for-each select="val">
                                     <xsl:value-of select="."/>
-                                    <xsl:if test="normalize-space(.)">
-                                        <span class="parms-type"> ({@type})</span>
-                                    </xsl:if>
+                                    <span class="parms-type"> ({@type})</span>
                                     <xsl:if test="position() ne last()">
                                         <br/>
                                     </xsl:if>
