@@ -68,7 +68,7 @@
                                             <td/>
                                             <td colspan="3">
                                                 <span class="context-stylesheet">
-                                                    <xsl:value-of select="substring-after($sheet,'\' || $webapp-name || '\xsl\')"/>
+                                                    <xsl:value-of select="substring-after($sheet,'/' || $webapp-name || '/xsl/')"/>
                                                 </span>
                                                 <span class="context-containertype">
                                                     <xsl:value-of select="$ctype"/>

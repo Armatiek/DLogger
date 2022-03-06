@@ -35,6 +35,10 @@
     
     <xsl:import href="common.xsl"/>
     
+    <xsl:variable name="passed-type" select="amf:get-parameter('type')"/>
+    
+    <xsl:variable name="background-color" select="if ($passed-type = 'main') then '#ffffcf' else if ($passed-type = 'sub') then '#e6faf7' else 'white'"/>
+    
     <xsl:template match="/">
         
         <xsl:variable name="dlogger-release" select="doc('../static/release/release.xml')/release-info/release[artifact = 'DLogger viewer']"/>
@@ -49,11 +53,11 @@
                 <link href="{$webapp-loc}/assets/css/local.css" rel="stylesheet"/>
                 <link href="{$webapp-loc}/assets/css/two-pane.css" rel="stylesheet"/>
             </head>
-            <body>
+            <body style="background: {$background-color};">
                 <!--<form  autocomplete="on">-->
                 <div id="dlogger-header">Dlogger (C) Armatiek BV | Version {$dlogger-release/major-minor}.{$dlogger-release/bugfix}</div>
                 <div class="container wrapper">
-                    <div id="index-pane">
+                    <div id="index-pane" >
                         <nav class="index-nav">
                             <h4><a href="https://armatiek.nl/DLogger/DLogger.respec.html" target="DLogger-doc">DLogger</a> - <span id="span-run">(no run yet)</span></h4>
                             
