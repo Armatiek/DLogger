@@ -35,9 +35,15 @@
     
     <xsl:import href="common.xsl"/>
     
-    <xsl:variable name="passed-type" select="amf:get-parameter('type')"/>
+    <xsl:variable name="passed-visual" select="amf:get-parameter('visual')"/>
     
-    <xsl:variable name="background-color" select="if ($passed-type = 'main') then '#ffffcf' else if ($passed-type = 'sub') then '#e6faf7' else 'white'"/>
+    <xsl:variable name="background-color" select="
+        if ($passed-visual = 'yellow') then '#ffffcf' else 
+        if ($passed-visual = 'blue') then '#e6faf7' else 
+        if ($passed-visual = 'red') then '#ffe6de' else 
+        if ($passed-visual = 'green') then '##e3ffde' else 
+        if ($passed-visual = 'orange') then '#fbdeb2' else 
+        'white'"/>
     
     <xsl:template match="/">
         
@@ -59,7 +65,7 @@
                 <div class="container wrapper">
                     <div id="index-pane" >
                         <nav class="index-nav">
-                            <h4><a href="https://armatiek.nl/DLogger/DLogger.respec.html" target="DLogger-doc">DLogger</a> - <span id="span-run">(no run yet)</span></h4>
+                            <h4><a href="https://armatiek.nl/respec/doc/report/armatiek/respec/DLogger/DLogger.html" target="DLogger-doc">DLogger</a> - <span id="span-run">(no run yet)</span></h4>
                             
                             <div class="dropdown" style="display: inline;">
                                 <button id="field-webapp-name" name="field-webapp-name" class="btn btn-outline-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
